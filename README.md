@@ -147,7 +147,6 @@ From here, you can **optimize again** (loops back to step 4) or stop.
 4. Add secrets in **Advanced Settings** (paste your TOML keys)
 5. Click **Deploy**
 
----
 
 ## 📄 License
 
