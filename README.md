@@ -1,6 +1,6 @@
 # 🚀 CampaignX — Multi-Agent AI Marketing Automation
 
-CampaignX is a Streamlit-powered marketing automation platform that uses **5 AI agents** to segment audiences, draft emails, send campaigns, monitor performance, and iteratively optimize email content — all from a single dashboard.
+CampaignX is a Streamlit-powered marketing automation platform built for the **CampaignX hackathon**. It uses **5 AI agents** to segment audiences, draft emails, send campaigns, monitor performance, and iteratively optimize email content — all from a single dashboard.
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue) ![Streamlit](https://img.shields.io/badge/Streamlit-1.30+-red) ![LLM](https://img.shields.io/badge/LLM-Llama_3.3_70B-purple) ![Observability](https://img.shields.io/badge/Observability-Langfuse-orange)
 
@@ -8,19 +8,20 @@ CampaignX is a Streamlit-powered marketing automation platform that uses **5 AI 
 
 ## ✨ Features
 
-- **AI-Powered Audience Segmentation** — LLM dynamically generates scoring logic based on your campaign brief and ranks customers.
-- **AI Copywriting** — Generates email drafts with subject lines, body content, and strategy reasoning.
-- **One-Click Campaign Launch** — Schedule emails via API with quick send (1 min) or custom time (IST).
-- **Real-Time Monitoring** — Fetch live open rate and click rate analytics for any campaign.
-- **Iterative Optimization Loop** — AI generates 5 optimized email variants using different strategies (Urgency, Curiosity, Social Proof, Emotional, Data-Driven). Pick one, send it, and compare results.
+- **AI-Powered Audience Segmentation** — LLM dynamically generates scoring logic based on the campaign brief and ranks customers.
+- **AI Copywriting** — Generates email drafts with subject lines, body content, CTA placement, and strategy reasoning.
+- **Human-in-the-Loop Review** — Preview, edit, approve, or reject campaign content before launch.
+- **One-Click Campaign Launch** — Schedule emails via the CampaignX API with quick send or custom time in IST.
+- **Real-Time Monitoring** — Fetch open rate and click rate analytics for any campaign.
+- **Iterative Optimization Loop** — AI generates 5 optimized email variants using different strategies: Urgency, Curiosity, Social Proof, Emotional, and Data-Driven.
 - **Comparison Dashboard** — Side-by-side performance comparison after each optimization round with full history table.
-- **Langfuse Observability** — All agent calls are traced for debugging and monitoring.
+- **Langfuse Observability** — All agent calls are traced for debugging, monitoring, and evaluation.
 
 ---
 
 ## 🏗️ Architecture
 
-```
+```text
 User → [Streamlit UI]
             │
             ├── Segmentation Agent → Scores & ranks customers
@@ -33,11 +34,12 @@ User → [Streamlit UI]
 ```
 
 **Tech Stack:**
+
 | Component | Technology |
-|-----------|-----------|
+|-----------|------------|
 | Frontend | Streamlit |
-| LLM | Groq (Llama 3.3 70B) |
-| API Execution | Dynamic API Executor (LLM reads API docs → formulates requests) |
+| LLM | Groq - Llama 3.3 70B |
+| API Execution | Dynamic API Executor |
 | Observability | Langfuse |
 | Language | Python 3.10+ |
 
@@ -45,20 +47,20 @@ User → [Streamlit UI]
 
 ## 📁 Project Structure
 
-```
-campaignx_v2/
-├── app.py                  # Main Streamlit app (5 pages: Input, Review, Monitor, Pick Variant, Compare)
-├── tools.py                # Dynamic API executor (LLM-powered HTTP request builder)
+```text
+Campaignx_2/
+├── app.py                  # Main Streamlit app: Input, Review, Monitor, Pick Variant, Compare
+├── tools.py                # Dynamic API executor
 ├── monitoring.py           # Langfuse setup
 ├── requirements.txt        # Dependencies
 ├── .streamlit/
-│   └── secrets.toml        # API keys (not committed)
+│   └── secrets.toml        # API keys - not committed
 └── agents/
     ├── __init__.py
-    ├── segmentation.py     # Segmentation Agent — scores customers with AI-generated logic
-    ├── copywriter.py       # Copywriter Agent — drafts emails & Optimizer Agent — generates 5 variants
-    ├── execution.py        # Execution Agent — sends campaigns via API
-    └── reporting.py        # Reporting Agent — fetches campaign analytics
+    ├── segmentation.py     # Segmentation Agent
+    ├── copywriter.py       # Copywriter Agent and Optimizer Agent
+    ├── execution.py        # Execution Agent
+    └── reporting.py        # Reporting Agent
 ```
 
 ---
@@ -69,8 +71,8 @@ campaignx_v2/
 
 - Python 3.10+
 - [Groq API Key](https://console.groq.com)
-- [Langfuse Account](https://cloud.langfuse.com) (for observability)
-- Campaign API access (Hackathon API Key)
+- [Langfuse Account](https://cloud.langfuse.com) for observability
+- CampaignX Hackathon API Key
 
 ### Installation
 
@@ -87,10 +89,13 @@ Create `.streamlit/secrets.toml`:
 ```toml
 GROQ_API_KEY = "your-groq-api-key"
 HACKATHON_API_KEY = "your-hackathon-api-key"
+
 LANGFUSE_PUBLIC_KEY = "your-langfuse-public-key"
 LANGFUSE_SECRET_KEY = "your-langfuse-secret-key"
 LANGFUSE_HOST = "https://us.cloud.langfuse.com"
 ```
+
+Make sure `.streamlit/secrets.toml` is added to `.gitignore`.
 
 ### Run Locally
 
@@ -103,20 +108,30 @@ streamlit run app.py
 ## 📖 How It Works
 
 ### 1. 📋 Input — Create Campaign
-Enter a campaign brief (e.g., *"Launch XDeposit for female senior citizens"*) and set the max audience size. AI agents will:
-- Fetch all customers from the database
-- Generate a scoring formula based on your brief
-- Rank and select the top customers
-- Draft the first email
+
+Enter a campaign brief, for example:
+
+> "Launch XDeposit for female senior citizens and optimize for open and click rates."
+
+Set the maximum audience size. The AI agents will:
+
+- Fetch the customer cohort from the CampaignX API
+- Generate scoring logic based on the brief
+- Rank and select the most relevant customers
+- Draft the first email campaign
 
 ### 2. ✍️ Review & Send
-Preview the AI-drafted email, rewrite if needed, and schedule the campaign (quick 1-minute send or custom time in IST).
+
+Preview the AI-generated email, edit it if needed, and schedule the campaign with quick send or custom time in IST.
 
 ### 3. 📊 Monitor
-Fetch real-time open rate and click rate. See a health banner and decide whether to optimize.
 
-### 4. ⚡ Optimize (Loop)
-Click "Generate 5 Optimized Emails" — the AI creates 5 variants with different strategies:
+Fetch campaign performance data, including open rate and click rate. View campaign health and decide whether optimization is needed.
+
+### 4. ⚡ Optimize
+
+Click **Generate 5 Optimized Emails**. The AI creates 5 variants using different strategies:
+
 | Variant | Strategy |
 |---------|----------|
 | V1 | 🔥 Urgency & Scarcity |
@@ -126,27 +141,56 @@ Click "Generate 5 Optimized Emails" — the AI creates 5 variants with different
 | V5 | 📊 Data-Driven & Logical |
 
 ### 5. 🎯 Pick & Launch
-Select the best variant, schedule it, and send to the same audience.
+
+Select the best variant, schedule it, and send it to the selected audience.
 
 ### 6. 📈 Compare
+
 A dedicated comparison page shows:
-- Previous vs Current rates (side-by-side)
-- Delta arrows (▲ improvement / ▼ decline)
-- Verdict (both improved / partial / no improvement)
+
+- Previous vs current open rate
+- Previous vs current click rate
+- Delta arrows for improvement or decline
+- Verdict: improved, partially improved, or not improved
 - Full optimization history table across all rounds
 
-From here, you can **optimize again** (loops back to step 4) or stop.
+From here, you can **optimize again** or stop.
+
+---
+
+## ✅ Rulebook Alignment
+
+| Requirement | Status |
+|------------|--------|
+| Web app UI | ✅ Streamlit dashboard |
+| Natural-language campaign brief | ✅ Supported |
+| Customer cohort API usage | ✅ Implemented |
+| AI-based segmentation | ✅ Implemented |
+| AI email generation | ✅ Implemented |
+| Human approval before launch | ✅ Implemented |
+| Campaign execution through API | ✅ Implemented |
+| Report fetching | ✅ Implemented |
+| Open/click analysis | ✅ Implemented |
+| Optimization loop | ✅ Implemented |
 
 ---
 
 ## ☁️ Deploy to Streamlit Cloud
 
-1. Push code to GitHub (make sure `secrets.toml` is in `.gitignore`)
-2. Go to [share.streamlit.io](https://share.streamlit.io)
-3. Click **New app** → select your repo → set main file path to `app.py`
-4. Add secrets in **Advanced Settings** (paste your TOML keys)
-5. Click **Deploy**
+1. Push code to GitHub. Make sure `secrets.toml` is in `.gitignore`.
+2. Go to [share.streamlit.io](https://share.streamlit.io).
+3. Click **New app** and select your repository.
+4. Set the main file path to `app.py`.
+5. Add secrets in **Advanced Settings**.
+6. Click **Deploy**.
 
+---
+
+## 👥 Team
+
+Built by Team **[Your Team Name]** for the CampaignX hackathon.
+
+---
 
 ## 📄 License
 
